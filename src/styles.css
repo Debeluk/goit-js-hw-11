@@ -131,3 +131,7 @@ header {
 .form-elements {
   margin-top: 10px;
 }
+
+.simple-lightbox .sl-image img {
+  transform: scale(1) !important;
+}
