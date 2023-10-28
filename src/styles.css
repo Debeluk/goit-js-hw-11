@@ -2,7 +2,7 @@ body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #0f0f0f;
 }
 
 header {
@@ -17,32 +17,36 @@ header {
   margin: 0;
   text-align: center;
   position: fixed;
-    top: 0; /* Чтобы форма была сверху экрана */
-    left: 0; /* Чтобы форма начиналась слева */
-    width: 100%; /* Чтобы форма занимала всю ширину экрана */
-    z-index: 10; /* Чтобы форма была поверх других элементов на странице */
-    background-color: gray;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: #423831;
 }
 
 #search-form input[type='text'] {
   padding: 10px 15px;
-  border: none;
+  border: 2px solid #faebd7;
   border-radius: 5px;
   outline: none;
+  background-color: transparent;
+  color: #faebd7 ;
 }
 
 #search-form button {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  background-color: #0073e6;
-  color: #fff;
+  background-color: transparent;
+  color: #faebd7;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  border: 2px solid #faebd7;
 }
 
 #search-form button:hover {
-  background-color: #005bb5;
+  background-color: #faebd7;
+  color: #423831;
 }
 
 .gallery {
@@ -63,6 +67,7 @@ header {
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  border: 2px solid #faebd7;
 }
 
 .photo-card img {
@@ -111,14 +116,16 @@ header {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #0073e6;
-  color: #fff;
+  background-color: transparent;
+  border: 2px solid #faebd7;
+  color: #faebd7;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .load-more:hover {
-  background-color: #005bb5;
+  background-color: #faebd7;
+  color: #0f0f0f;
 }
 
 .form-elements {
