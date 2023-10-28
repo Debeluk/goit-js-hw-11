@@ -1,5 +1,7 @@
 import axiosn from 'axios';
-import Notiflix from 'notiflix';
+import { Notify } from 'notiflix';
+import simpleLightbox from 'simplelightbox';
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const API_KEY = '40334609-b80ca2dc1b64dcae4aab10255';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -30,39 +32,31 @@ async function fetchImages(query, page) {
   const data = await response.json();
 
   if (data.hits.length === 0 ) {
+    Notify.failure("Sorry, there are no images matching your search query. Please try again.");
     throw new Error("No images found for the given query.");
   }
-
   return data.hits;
 }
-
-console.log(fetchImages)
-
 
 // Розмітка картинок 
 function renderImages(images) {
   images.forEach(image => {
-    const markup = `
-      <div class="photo-card">
-        <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
-        <div class="info">
-          <p class="info-item">
-            <b>Likes:</b> ${image.likes}
-          </p>
-          <p class="info-item">
-            <b>Views:</b> ${image.views}
-          </p>
-          <p class="info-item">
-            <b>Comments:</b> ${image.comments}
-          </p>
-          <p class="info-item">
-            <b>Downloads:</b> ${image.downloads}
-          </p>
+    const imageMarkup = `
+      <a href="${image.largeImageURL}" class="lightbox">
+        <div class="photo-card">
+          <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
+          <div class="info">
+            <p class="info-item"><b>Likes:</b> ${image.likes}</p>
+            <p class="info-item"><b>Views:</b> ${image.views}</p>
+            <p class="info-item"><b>Comments:</b> ${image.comments}</p>
+            <p class="info-item"><b>Downloads:</b> ${image.downloads}</p>
+          </div>
         </div>
-      </div>
-    `;
-    gallery.insertAdjacentHTML('beforeend', markup);
+      </a>`;
+    gallery.insertAdjacentHTML('beforeend', imageMarkup);
   });
+  const lightbox = new simpleLightbox('.lightbox');
+  lightbox.refresh();
 }
 
 
@@ -73,11 +67,10 @@ form.addEventListener('submit', async (event) => {
   currentQuery = event.target.elements.searchQuery.value;
   currentPage = 1;
   gallery.innerHTML = '';
-
   try {
     const images = await fetchImages(currentQuery, currentPage);
     renderImages(images);
-    loadMoreBtn.style.display = 'flex';
+    loadMoreBtn.style.display = 'block';
   } catch (error) {
     console.error(error.message);
   }
@@ -92,6 +85,22 @@ loadMoreBtn.addEventListener('click', async () => {
     const images = await fetchImages(currentQuery, currentPage);
     renderImages(images);
   } catch (error) {
+    Notify.info("We're sorry, but you've reached the end of search results.");
+    loadMoreBtn.style.display = 'none';
     console.error(error.message);
   }
+  smoothScroll();
 });
+
+
+// Плавна прокрутка 
+function smoothScroll() {
+  const { height: cardHeight } = document
+    .querySelector(".gallery")
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: "smooth",
+  });
+}
