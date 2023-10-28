@@ -61,7 +61,7 @@ function renderImages(images) {
       </a>`;
     gallery.insertAdjacentHTML('beforeend', imageMarkup);
   });
-  const lightbox = new simpleLightbox('.lightbox');
+  const lightbox = new simpleLightbox('.lightbox', { zoomable: false });
   lightbox.refresh();
 }
 
