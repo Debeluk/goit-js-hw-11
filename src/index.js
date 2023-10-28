@@ -35,6 +35,7 @@ async function fetchImages(query, page) {
     Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
+    loadMoreBtn.style.display = 'none';
     throw new Error('No images found for the given query.');
   }
   if (data.hits.length === 0) {
