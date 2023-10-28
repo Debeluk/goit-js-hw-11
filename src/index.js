@@ -77,7 +77,20 @@ form.addEventListener('submit', async (event) => {
   try {
     const images = await fetchImages(currentQuery, currentPage);
     renderImages(images);
-    loadMoreBtn.style.display = 'block';
+    loadMoreBtn.style.display = 'flex';
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+
+// Кнопка load more
+
+loadMoreBtn.addEventListener('click', async () => {
+  try {
+    currentPage += 1;
+    const images = await fetchImages(currentQuery, currentPage);
+    renderImages(images);
   } catch (error) {
     console.error(error.message);
   }
