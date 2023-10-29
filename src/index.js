@@ -1,4 +1,4 @@
-import axiosn from 'axios';
+import axios from 'axios';
 import { Notify } from 'notiflix';
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -28,20 +28,26 @@ async function fetchImages(query, page) {
   const stringParams = new URLSearchParams(options).toString();
   const url = `${BASE_URL}?${stringParams}`;
 
-  const response = await fetch(url);
-  const data = await response.json();
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
 
-  if (data.totalHits === 0) {
-    Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-    loadMoreBtn.style.display = 'none';
-    throw new Error('No images found for the given query.');
+    if (data.totalHits === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      loadMoreBtn.style.display = 'none';
+      throw new Error('No images found for the given query.');
+    }
+    if (data.hits.length === 0) {
+      throw new Error('No more images available for the given query.');
+    }
+    return data;
+    
+  } catch (error) {
+    console.error('Error fetching data from Pixabay:', error.message);
+    throw error;
   }
-  if (data.hits.length === 0) {
-    throw new Error('No more images available for the given query.');
-  }
-  return data;
 }
 
 // Розмітка картинок
