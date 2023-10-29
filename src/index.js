@@ -39,11 +39,8 @@ async function fetchImages(query, page) {
       loadMoreBtn.style.display = 'none';
       throw new Error('No images found for the given query.');
     }
-    if (data.hits.length === 0) {
-      throw new Error('No more images available for the given query.');
-    }
+
     return data;
-    
   } catch (error) {
     console.error('Error fetching data from Pixabay:', error.message);
     throw error;
@@ -78,10 +75,16 @@ form.addEventListener('submit', async event => {
   currentQuery = event.target.elements.searchQuery.value;
   currentPage = 1;
   gallery.innerHTML = '';
+
   try {
     const data = await fetchImages(currentQuery, currentPage);
     renderImages(data.hits);
-    loadMoreBtn.style.display = 'block';
+    if (data.hits.length < 40) {
+      Notify.info("We're sorry, but you've reached the end of search results.");
+      loadMoreBtn.style.display = 'none';
+    } else {
+      loadMoreBtn.style.display = 'block';
+    }
     if (currentPage === 1) {
       Notify.success(`Hooray! We found ${data.totalHits} images.`);
     }
@@ -91,19 +94,17 @@ form.addEventListener('submit', async event => {
 });
 
 // Кнопка load more
-
 loadMoreBtn.addEventListener('click', async () => {
   try {
     currentPage += 1;
     const data = await fetchImages(currentQuery, currentPage);
     renderImages(data.hits);
-  } catch (error) {
-    if (error.message === 'No more images available for the given query.') {
+    if (data.hits.length < 40) {
       Notify.info("We're sorry, but you've reached the end of search results.");
       loadMoreBtn.style.display = 'none';
-    } else {
-      console.error(error.message);
     }
+  } catch (error) {
+    console.error(error.message);
   }
   smoothScroll();
 });
